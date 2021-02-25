@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.TextMapper">
+	
+	<insert id="addText" useGeneratedKeys="true" keyProperty="id">
+    	insert into text(id,content) 
+		values(id,#{content})
+    </insert>
+    
+    <delete id="delText">
+    	DELETE from text
+		where id=#{id}
+    </delete>
+    
+    <update id="updateText">
+    	update text SET
+		id=#{id},
+		content=#{content}
+		where id=#{id}
+    </update>
+    
+    <select id="getTextById" resultType="com.ts.coursework.entity.Text">
+        SELECT  id,content
+		from text
+		where id=#{id}
+    </select>
+    
+    <select id="getAllTexts" resultType="com.ts.coursework.entity.Text">
+        SELECT  id,content
+        from text
+    </select>
+    
+    
+    
+</mapper>

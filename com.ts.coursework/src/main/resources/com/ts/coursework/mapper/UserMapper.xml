@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.UserMapper">
+	<resultMap id="UserMap" type="com.ts.coursework.entity.User">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="enabled" property="enabled"/>
+        <result column="locked" property="locked"/>
+        <result column="real_name" property="realName"/>
+        <result column="phone" property="phone"/>
+        <result column="age" property="age"/>
+        <result column="sex" property="sex"/>
+    </resultMap>
+    
+    <resultMap id="UserMapWithRoles" type="com.ts.coursework.entity.User" extends="UserMap">
+       <collection property="roles" ofType="com.ts.coursework.entity.Role">
+            <id property="id" column="roleId"/>
+            <result property="name" column="roleName"/>
+            <result property="nameZh" column="roleNameZh"/>
+        </collection>
+    </resultMap>
+
+    <insert id="addUser">
+    	insert into user(id,name,password,enabled,locked,real_name,phone,age,sex) values (#{id},#{name},#{password},#{enabled},#{locked},#{realName},#{phone},#{age},#{sex});
+    </insert>
+    
+    <delete id="delUserById">
+    	delete from user where id=#{id}
+    </delete>
+    
+    <update id="updateUser">
+    	update user set
+    	id=#{id},
+    	name=#{name},
+    	enabled=#{enabled},
+    	locked=#{locked},
+    	real_name=#{realName},
+    	phone=#{phone},
+    	age=#{age},
+    	sex=#{sex}
+    	where id=#{id}
+    </update>
+    
+    <select id="getUserById" resultMap="UserMapWithRoles">
+    	select `user`.id as "id",`user`.name as "name",`password`,enabled,locked,real_name,phone,age,sex,
+		role.id as "roleId",role.`name` as "roleName",role.nameZh as "roleNameZh",role.name from user,role,user_role
+		where `user`.id=user_role.userId and role.id=user_role.roleId and `user`.id=#{id}
+    </select>
+    
+    <select id="getAllUser" resultMap="UserMapWithRoles">
+    	select `user`.id as "id",`user`.name as "name",`password`,enabled,locked,real_name,phone,age,sex,
+		role.id as "roleId",role.`name` as "roleName",role.nameZh as "roleNameZh",role.name from user,role,user_role
+		where `user`.id=user_role.userId and role.id=user_role.roleId
+    </select>
+    
+    <insert id="addRoleForUser">
+    	insert into user_role(id,userId,roleId) values(id,#{userId},#{roleId})
+    </insert>
+    
+    <delete id="delRoleForUser">
+    	delete from user_role where userId=#{userId} and roleId=#{roleId}
+    </delete>
+    
+    <select id="getRolesByUserId" resultType="com.ts.coursework.entity.Role">
+    	select role.id as "id",role.name as "name", role.nameZh as "nameZh" 
+    	from user_role,role where role.id=user_role.roleId and user_role.userId=#{id}
+    </select>
+    
+    <select id="getUserByName" resultMap="UserMapWithRoles">
+    	select id,name,password,enabled,locked,real_name,phone,age,sex from user where name=#{name}
+    </select>
+    
+    <select id="getUserByCourseId" resultType="com.ts.coursework.entity.User">
+    	select `user`.id,`user`.name,password,enabled,locked
+		from user,course,user_course 
+		where user_course.userId=`user`.id and user_course.courseId=course.id and userType=2 and course.id=#{courseId}
+    </select>
+</mapper>

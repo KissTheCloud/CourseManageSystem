@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.CourseMapper">
+	
+	<resultMap id="CourseMap" type="com.ts.coursework.entity.Course">
+		<id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="className" property="className"/>
+        <result column="schoolYear" property="schoolYear"/>
+        <result column="semester" property="semester"/>
+        <result column="joinCode" property="joinCode"/>
+	</resultMap>
+	
+	<insert id="addCourse">
+    	insert into course(id,name,className,schoolYear,semester,joinCode) 
+		values(id,#{name},#{className},#{schoolYear},#{semester},#{joinCode})
+    </insert>
+    
+    <update id="updateCourse">
+    	update course SET
+		id=#{id},
+		name=#{name},
+		className=#{className},
+		schoolYear=#{schoolYear},
+		semester=#{semester},
+		joinCode=#{joinCode}
+		where id=#{id}
+    </update>
+    
+    <delete id="delCourse">
+    	DELETE from course
+		where id=#{id}
+    </delete>
+    
+    <update id="quitCourse">
+   		DELETE from user_course
+		where user_course.userId=#{userId} and user_course.courseId=#{courseId} and (user_course.userType=0 or user_course.userType=1)
+    </update>
+    
+    <update id="placeCourseOnFile">
+    	update user_course SET
+		user_course.state=1
+		where user_course.userId=#{userId} and user_course.courseId=#{courseId}
+    </update>
+    
+    <update id="resumeCourseFromFile">
+    	update user_course SET
+		user_course.state=0
+		where user_course.userId=#{userId} and user_course.courseId=#{courseId}
+    </update>
+    
+    <select id="getCourseByJoinCode" resultMap="CourseMap">
+    	select id,name,className,schoolYear,semester,joinCode
+		from course
+		where joinCode=#{joinCode}
+    </select>
+    
+    <select id="getCourseById" resultMap="CourseMap">
+    	select id,name,className,schoolYear,semester,joinCode
+		from course
+		where id=#{id}
+    </select>
+    
+	<select id="getCoursesByUserId" resultMap="CourseMap">
+        select course.id,course.name,className,schoolYear,semester,joinCode 
+		from course,user_course 
+		where course.id=user_course.courseId and user_course.userId=#{userId} and state=0
+    </select>
+    
+    <select id="getPlaceCourseByUserId" resultMap="CourseMap">
+        select course.id,course.name,className,schoolYear,semester,joinCode 
+		from course,user_course 
+		where course.id=user_course.courseId and user_course.userId=#{userId} and state=1
+    </select>
+    
+    <select id="getUserTypeByUserIdCourseId" resultType="Integer">
+    	SELECT userType
+		from user_course
+		where user_course.userId=#{userId} and user_course.courseId=#{courseId}
+    </select>
+    
+    <select id="getMembersCount" resultType="Integer">
+    	SELECT COUNT(id) from user_course where user_course.courseId=#{courseId}
+    </select>
+    
+    <insert id="addCourseByJoinCode">
+    	insert into user_course(id,user_course.index,userId,courseId,userType,state) 
+		SELECT null,#{index},#{userId},course.id,#{userType},0
+		from course
+		where course.joinCode=#{joinCourseCode}
+    </insert>
+    
+    <select id="getMaxUserCourseIndex" resultType="Integer">
+    	 SELECT IFNULL(MAX(user_course.`index`),0) from user_course
+		where user_course.userId=#{userId}
+    </select>
+    
+    <insert id="addCourseForUser">
+    	insert into user_course(id,user_course.`index`,userId,courseId,userType,state)
+		VALUES (id,#{index},#{userId},#{courseId},#{userType},0)
+    </insert>
+    
+    <select id="getStusByCourseId" resultType="com.ts.coursework.entity.User">
+    	select `user`.id,`user`.name,`user`.`password`,`user`.enabled,`user`.locked
+		from user,user_course
+		where user_course.userId=`user`.id and user_course.userType=0 and user_course.courseId=#{courseId}
+    </select>
+</mapper>

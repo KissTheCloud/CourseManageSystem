@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.FileMapper">
+	<select id="getExploreWorkFiles" resultType="com.ts.coursework.entity.ExploreWorkFile">
+		select id,exploreWorkId,workFileId
+		from explore_work_file
+		where explore_work_file.exploreWorkId=#{exploreWoreId}
+	</select>
+	
+	<select id="getWorkFileById" resultType="com.ts.coursework.entity.WorkFile">
+		select id,name,path
+		from work_file
+		where work_file.id=#{workFileId}
+	</select>
+	
+	<select id="getSubmitWorkFiles" resultType="com.ts.coursework.entity.SubmitWorkFile">
+		select id,submitWorkId,workFileId
+		from submit_work_file
+		where submit_work_file.submitWorkId=#{submitWorkId}
+	</select>
+	
+	<insert id="uploadExploreWorkFile">
+		insert into explore_work_file(id,exploreWorkId,workFileId)
+		values (id,#{exploreWorkId},#{workFileId})
+	</insert>
+	
+	<insert id="uploadSubmitWorkFile">
+		insert into submit_work_file(id,submitWorkId,workFileId)
+		values (id,#{submitWorkId},#{workFileId})
+	</insert>
+	
+	<insert id="uploadWorkFile">
+		insert into work_file(id,name,path)
+		values(id,#{name},#{path})
+	</insert>
+	
+	<select id="getWorkFileByPath" resultType="com.ts.coursework.entity.WorkFile">
+		select id,name,path
+		from work_file
+		where path=#{path}
+	</select>
+	
+	<delete id="delWorkFile">
+		delete from work_file
+		where id=#{workFileId}
+	</delete>
+	
+	
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.ExamMapper">
+	
+	<resultMap id="ExamMap" type="com.ts.coursework.entity.Exam">
+		<id column="id" property="id"/>
+        <result column="exam_paper_id" property="examPaperId"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="duration" property="duration"/>
+        <result column="title" property="title"/>
+	</resultMap>
+	
+	<insert id="add">
+    	insert into exam(id,exam_paper_id,subject_id,start_time,end_time,duration,title) 
+		values(id,#{examPaperId},#{subjectId},#{startTime},#{endTime},#{duration},#{title})
+    </insert>
+    
+    <delete id="del">
+    	DELETE from exam
+		where id=#{id}
+    </delete>
+    
+    <update id="update">
+    	update exam SET
+		id=#{id},
+		exam_paper_id=#{examPaperId},
+		subject_id=#{subjectId},
+		start_time=#{startTime},
+		end_time=#{endTime},
+		duration=#{duration},
+		title=#{title}
+		where id=#{id}
+    </update>
+    
+    <select id="get" resultMap="ExamMap">
+        SELECT  id,exam_paper_id,subject_id,start_time,end_time,duration,title 
+		from exam
+		where id=#{id}
+    </select>
+    
+    <select id="getAll" resultMap="ExamMap">
+        SELECT  id,exam_paper_id,subject_id,start_time,end_time,duration,title 
+		from exam
+    </select>
+    
+    <select id="getBySubjectId" resultMap="ExamMap">
+       SELECT  id,exam_paper_id,subject_id,start_time,end_time,duration,title 
+		from exam
+		where subject_id=#{subjectId}
+    </select>
+    
+    <select id="getExamsByUserId" resultMap="ExamMap">
+       SELECT  exam.id as id,exam_paper_id,subject_id,start_time,end_time,duration,exam.title as title
+		from exam
+		where exam.id=user_exam_map.exam_id and user_id=#{userId}
+    </select>
+    
+</mapper>

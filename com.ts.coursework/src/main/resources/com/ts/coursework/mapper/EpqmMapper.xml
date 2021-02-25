@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.EpqmMapper">
+	
+	<resultMap id="EpqmMap" type="com.ts.coursework.entity.Epqm">
+		<id column="id" property="id"/>
+        <result column="exam_paper_id" property="examPaperId"/>
+        <result column="question_id" property="questionId"/>
+	</resultMap>
+	
+	<insert id="add">
+    	insert into exam_paper_question_map(id,exam_paper_id,question_id) 
+		values(id,#{examPaperId},#{questionId})
+    </insert>
+    
+    <delete id="del">
+    	DELETE from exam_paper_question_map
+		where id=#{id}
+    </delete>
+    
+    <update id="update">
+    	update exam_paper_question_map SET
+		id=#{id},
+		exam_paper_id=#{examPaperId},
+		type=#{type},
+		question_id=#{questionId}
+		where id=#{id}
+    </update>
+    
+    <select id="get" resultMap="EpqmMap">
+        SELECT  id,exam_paper_id,question_id 
+		from exam_paper_question_map
+		where id=#{id}
+    </select>  
+    
+    <delete id="delByExamPaperId">
+    	DELETE from exam_paper_question_map
+		where exam_paper_id=#{examPaperId}
+    </delete>  
+    
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.QuestionMapper">
+	
+	<resultMap id="QuestionMap" type="com.ts.coursework.entity.Question">
+		<id column="id" property="id"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="type" property="type"/>
+        <result column="score" property="score"/>
+        <result column="name" property="name"/>
+        <result column="status" property="status"/>
+        <result column="content_id" property="contentId"/>
+	</resultMap>
+	
+	<insert id="addQuestion">
+    	insert into question(id,subject_id,type,score,name,status,content_id) 
+		values(id,#{subjectId},#{type},#{score},#{name},#{status},#{contentId})
+    </insert>
+    
+    <delete id="delQuestion">
+    	DELETE from question
+		where id=#{id}
+    </delete>
+    
+    <update id="updateQuestion">
+    	update question SET
+		id=#{id},
+		subject_id=#{subjectId},
+		type=#{type},
+		score=#{score},
+		name=#{name},
+		status=#{status},
+		content_id=#{contentId}
+		where id=#{id}
+    </update>
+    
+    <select id="getQuestionById" resultMap="QuestionMap">
+        SELECT  id,subject_id,type,score,name,status,content_id 
+		from question
+		where id=#{id}
+    </select>
+    
+    <select id="getAllQuestions" resultMap="QuestionMap">
+        SELECT  id,subject_id,type,score,name,status,content_id 
+        from question
+    </select>
+    
+    <select id="getQuestionsByExamPaperId" resultMap="QuestionMap">
+       select question.id as id,subject_id,type,score,question.`name` as `name`,question.`status` as status,question.content_id as content_id  
+		from question,exam_paper_question_map
+		where question_id=question.id and exam_paper_question_map.exam_paper_id=#{examPaperId}
+    </select>
+    
+    <select id="getQuestionsBySubjectId" resultMap="QuestionMap">
+        SELECT  id,subject_id,type,score,name,status,content_id 
+        from question
+        where subject_id=#{subjectId}
+    </select>
+    
+</mapper>

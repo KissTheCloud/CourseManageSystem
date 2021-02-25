@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.ExploreWorkMapper">
+	
+	<resultMap id="ExploreWorkMap" type="com.ts.coursework.entity.ExploreWork">
+		<id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="content" property="content"/>
+        <result column="exploreTime" property="exploreTime"/>
+        <result column="endTime" property="endTime"/>
+        <result column="courseId" property="courseId"/>
+        <result column="fullScore" property="fullScore"/>
+        <result column="userId" property="userId"/>
+	</resultMap>
+	
+	<insert id="addExploreWork" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into explore_work(id,name,content,endTime,fullScore,userId,courseId,exploreTime)
+		values(id,#{name},#{content},#{endTime},#{fullScore},#{userId},#{courseId},#{exploreTime})
+	</insert>
+	
+	<update id="updateExploreWork">
+		update explore_work SET
+		id=#{id},
+		name=#{name},
+		content=#{content},
+		endTime=#{endTime},
+		fullScore=#{fullScore},
+		userId=#{userId},
+		courseId=#{courseId},
+		exploreTime=#{exploreTime}
+		where id=#{id}
+	</update>
+	
+	<delete id="delExploreWork">
+		delete from explore_work where id=#{courseId}
+	</delete>
+	
+	<select id="getExploreWorksByCourseId" resultMap="ExploreWorkMap">
+        SELECT id,name,content,exploreTime,endTime,courseId,fullScore,userId
+		from explore_work
+		where explore_work.courseId=#{courseId}
+    </select>
+    
+    <select id="getExploreWorkById" resultType="com.ts.coursework.entity.ExploreWork">
+    	SELECT id,name,content,endTime,fullScore,userId,courseId,exploreTime 
+		from explore_work
+		where id=#{exploreWorkId}
+    </select>
+</mapper>

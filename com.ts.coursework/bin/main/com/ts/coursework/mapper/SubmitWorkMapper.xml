@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ts.coursework.mapper.SubmitWorkMapper">
+	<select id="getSubmitWork" resultType="com.ts.coursework.entity.SubmitWork">
+		select submit_work.id,submit_work.userId,submit_work.score,submit_work.exploreWorkId,submit_work.submitTime
+		from submit_work
+		where submit_work.userId=#{userId} and submit_work.exploreWorkId=#{exploreWorkId}
+	</select>
+	
+	<select id="getSubmitWorksByExploreWorkId" resultType="com.ts.coursework.entity.SubmitWork">
+		select submit_work.id,submit_work.userId,submit_work.score,submit_work.exploreWorkId,submit_work.submitTime
+		from submit_work
+		where submit_work.exploreWorkId=#{exploreWorkId}
+	</select>
+	
+	<insert id="addSubmitWork" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into submit_work(id,submit_work.exploreWorkId,submit_work.userId)
+		values(id,#{exploreWorkId},#{userId})
+	</insert>
+	
+</mapper>
